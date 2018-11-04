@@ -60,8 +60,6 @@ function menu.build()
                         wgt = wibox.widget.imagebox(icon)
                         if cmdline:find(".*C:.*") then
                             cmdline = cmdline:gsub("\\\\", '\\')
-                            gears.debug.dump(cmdline)
-
                         end
                         wgt:buttons(awful.button({ }, 1, nil, function()
                             awful.spawn.with_shell(cmdline)

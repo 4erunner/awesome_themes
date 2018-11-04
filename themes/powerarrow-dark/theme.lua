@@ -327,16 +327,19 @@ function theme.vertical_wibox(s)
     
     appmenu = appbar.menu.build()
 
+    bar = {layout = wibox.layout.fixed.vertical}
+    table.insert(bar, wibox.container.margin(mylauncher2, 5, 8, 13, 0))
+
+    for _, app in pairs(appmenu) do
+        table.insert(bar,  wibox.container.margin(app, 5, 8, 13, 0))
+    end
+
+    gears.debug.dump(bar)
+
     -- Add widgets to the vertical wibox
     s.myleftwibox:setup {
         layout = wibox.layout.align.vertical,
-        {
-            layout = wibox.layout.fixed.vertical,
-            wibox.container.margin(mylauncher2, 5, 8, 13, 0),
-            wibox.container.margin(appmenu[1], 5, 8, 13, 0),
-            wibox.container.margin(appmenu[2], 5, 8, 13, 0),
-            wibox.container.margin(appmenu[3], 5, 8, 13, 0),
-        },
+        bar,
     }
 
     -- Add toggling functionalities
