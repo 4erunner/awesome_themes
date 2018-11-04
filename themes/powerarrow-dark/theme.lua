@@ -9,6 +9,7 @@ local gears = require("gears")
 local lain  = require("lain")
 local awful = require("awful")
 local wibox = require("wibox")
+local appbar = require("appbar")
 
 --slocal os = { getenv = os.getenv }
 local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
@@ -24,7 +25,7 @@ do
   }
 
   for _,i in pairs(cmds) do
-    awful.util.spawn(i)
+    awful.spawn.with_shell(i)
   end
 end
 
@@ -323,6 +324,8 @@ function theme.vertical_wibox(s)
     if s.index > 1 and s.myleftwibox.y == 0 then
         s.myleftwibox.y = screen[1].myleftwibox.y
     end
+    
+    appmenu = appbar.menu.build()
 
     -- Add widgets to the vertical wibox
     s.myleftwibox:setup {
@@ -330,6 +333,9 @@ function theme.vertical_wibox(s)
         {
             layout = wibox.layout.fixed.vertical,
             wibox.container.margin(mylauncher2, 5, 8, 13, 0),
+            wibox.container.margin(appmenu[1], 5, 8, 13, 0),
+            wibox.container.margin(appmenu[2], 5, 8, 13, 0),
+            wibox.container.margin(appmenu[3], 5, 8, 13, 0),
         },
     }
 
@@ -338,15 +344,15 @@ function theme.vertical_wibox(s)
     s.docktimer:connect_signal("timeout", function()
         local s = awful.screen.focused()
         s.myleftwibox.width = 1
-        mylauncher2.visible = false
+        --mylauncher2.visible = false
         if s.docktimer.started then
             s.docktimer:stop()
         end
     end)
     tag.connect_signal("property::selected", function(t)
         local s = t.screen or awful.screen.focused()
-        s.myleftwibox.width = 38
-        mylauncher2.visible = true
+        -- s.myleftwibox.width = 38
+        -- mylauncher2.visible = true
         gears.surface.apply_shape_bounding(s.myleftwibox, dockshape)
         if not s.docktimer.started then
             s.docktimer:start()
@@ -356,7 +362,7 @@ function theme.vertical_wibox(s)
     s.myleftwibox:connect_signal("mouse::leave", function()
         local s = awful.screen.focused()
         s.myleftwibox.width = 1
-        mylauncher2.visible = false
+        --mylauncher2.visible = false
     end)
 
     s.myleftwibox:connect_signal("mouse::enter", function()
