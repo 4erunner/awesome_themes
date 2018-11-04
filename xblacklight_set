@@ -1,0 +1,32 @@
+#!/bin/sh
+
+for path in /sys/class/backlight/*
+do 
+	if [[ -d $path ]]
+	then
+		break
+	fi
+done
+
+read -r level < "$path"/actual_brightness
+read -r max < "$path"/max_brightness
+
+factor=$(($max / 10))
+
+if [[ "$1" = "up" ]]
+then
+next=$(($level+$factor))
+if (( $next > $max ))
+then
+next=$max
+fi
+else
+next=$(($level-$factor))
+if (( $next <= 0 ))
+then
+next=$factor
+fi
+fi
+
+echo "$next" > "$path"/brightness
+
