@@ -343,7 +343,7 @@ function theme.vertical_wibox(s)
     }
 
     -- Add toggling functionalities
-    s.docktimer = gears.timer{ timeout = 2 }
+    s.docktimer = gears.timer{ timeout = 10 }
     s.docktimer:connect_signal("timeout", function()
         local s = awful.screen.focused()
         s.myleftwibox.width = 1
@@ -371,7 +371,6 @@ function theme.vertical_wibox(s)
     s.myleftwibox:connect_signal("mouse::enter", function()
         local s = awful.screen.focused()
         s.myleftwibox.width = 38
-        mylauncher2.visible = true
         gears.surface.apply_shape_bounding(s.myleftwibox, dockshape)
     end)
 end
