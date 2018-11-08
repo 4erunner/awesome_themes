@@ -10,6 +10,7 @@ local lain  = require("lain")
 local awful = require("awful")
 local wibox = require("wibox")
 local appbar = require("appbar")
+local naughty = require("naughty")
 
 --slocal os = { getenv = os.getenv }
 local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
@@ -141,6 +142,41 @@ local dockshape = function(cr, width, height)
     gears.shape.partially_rounded_rect(cr, width, height, false, true, true, false, 6)
 end
 
+local function notify_bar(procent)
+    preset = { font = "Monospace 12", fg = theme.fg_normal }
+    gears.debug.dump(procent)
+    preset.title = string.format("%s - %s%%", "backlight", procent)
+
+    -- -- tot is the maximum number of ticks to display in the notification
+    -- -- fallback: default horizontal wibox height
+    local wib, tot = awful.screen.focused().mywibox, 20
+
+    -- -- if we can grab mywibox, tot is defined as its height if
+    -- -- horizontal, or width otherwise
+    if wib then
+        if wib.position == "left" or wib.position == "right" then
+            tot = wib.width
+        else
+            tot = wib.height
+        end
+    end
+
+    int = math.modf((procent / 100) * tot)
+    preset.text = string.format("[%s%s]", string.rep("|", int),
+                  string.rep(" ", tot - int))
+
+    preset.screen = awful.screen.focused()
+
+    if not notification then
+      notification = naughty.notify {
+            preset  = preset,
+            destroy = function() notification = nil end
+        }
+    else 
+      naughty.replace_text(notification, preset.title, preset.text)
+    end
+end
+
 -- Textclock
 local clockicon = wibox.widget.imagebox(theme.widget_clock)
 local clock = awful.widget.watch(
@@ -188,21 +224,40 @@ local bat = lain.widget.bat({
         widget:buttons(my_table.join (
           awful.button({}, 4, function()
             run_once({"sudo xbacklight_set up", ""})
+    awful.spawn.with_line_callback("sudo xbacklight_set", {
+    stdout = function(line)
+        notify_bar(line)
+    end
+    })
           end),
           awful.button({}, 5, function()
             run_once({"sudo xbacklight_set down", ""})
+    awful.spawn.with_line_callback("sudo xbacklight_set", {
+    stdout = function(line)
+        notify_bar(line)
+    end
+    })
           end)))
     end
 })
 baticon:buttons(my_table.join (
   awful.button({}, 4, function()
     run_once({"sudo xbacklight_set up", ""})
+    awful.spawn.with_line_callback("sudo xbacklight_set", {
+    stdout = function(line)
+        notify_bar(line)
+    end
+    })
   end),
 awful.button({}, 5, function()
     run_once({"sudo xbacklight_set down", ""})
+    awful.spawn.with_line_callback("sudo xbacklight_set", {
+    stdout = function(line)
+        notify_bar(line)
+    end
+    })
   end)
   ))
-
 
 -- MEM
 local memicon = wibox.widget.imagebox(theme.widget_mem)

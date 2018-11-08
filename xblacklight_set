@@ -11,22 +11,35 @@ done
 read -r level < "$path"/actual_brightness
 read -r max < "$path"/max_brightness
 
-factor=$(($max / 10))
+factor=$(( $max / 10 ))
+
+
+if [[ "$1" = "" ]]
+	then
+	ff=$(( $level * 100 / $max ))
+	echo $ff
+fi
+
 
 if [[ "$1" = "up" ]]
-then
-next=$(($level+$factor))
-if (( $next > $max ))
-then
-next=$max
-fi
-else
-next=$(($level-$factor))
-if (( $next <= 0 ))
-then
-next=$factor
-fi
+	then
+	next=$(($level+$factor))
+	if (( $next > $max ))
+		then
+		next=$max	
+	fi
+	echo "$next" > "$path"/brightness
 fi
 
-echo "$next" > "$path"/brightness
+if [[ "$1" = "down" ]]
+	then
+	next=$(($level-$factor))
+	if (( $next <= 0 ))
+		then
+		next=$factor
+	fi
+	echo "$next" > "$path"/brightness
+fi
+
+
 
