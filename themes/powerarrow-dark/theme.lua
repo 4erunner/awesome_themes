@@ -211,8 +211,14 @@ local bat = lain.widget.bat({
                 return
             elseif not bat_now.perc and tonumber(bat_now.perc) <= 5 then
                 baticon:set_image(theme.widget_battery_empty)
+                aughty.notify({ preset = naughty.config.presets.critical,
+                     title = "Warning!",
+                     text = "Battery is EMPTY" })
             elseif not bat_now.perc and tonumber(bat_now.perc) <= 15 then
                 baticon:set_image(theme.widget_battery_low)
+                naughty.notify({ preset = naughty.config.presets.critical,
+                     title = "Warning!",
+                     text = "Battery is LOW" })
             else
                 baticon:set_image(theme.widget_battery)
             end
