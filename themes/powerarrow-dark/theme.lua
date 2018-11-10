@@ -43,8 +43,10 @@ awful.spawn.with_shell("sleep 2 && klipper")
 
 
 local tasklist_shape = function(cr, width, height)
-    gears.shape.rounded_rect(cr,width,height, 5)
-    gears.shape.transform(gears.shape.rounded_rect) : translate(0,25) (cr,width,height, 5)
+    --gears.shape.rounded_rect(cr,width,height, 5)
+    --gears.shape.transform(gears.shape.rounded_rect) : translate(0,25) (cr,width,height, 5)
+    gears.shape.hexagon(cr, width, height)
+    gears.shape.transform(gears.shape.hexagon) : translate(0,25)(cr,width, height)
 end
 
 
@@ -386,8 +388,9 @@ local net = lain.widget.net({
 
 -- Separators
 local spr     = wibox.widget.textbox(' ')
+
 local arrl_dl = separators.arrow_left(theme.bg_focus, "alpha")
-local arrl_ld = separators.arrow_left("alpha", theme.bg_focus)
+local arrl_dr = separators.arrow_right("alpha", theme.bg_focus)
 
 function theme.vertical_wibox(s)
     -- Create the vertical wibox
@@ -489,8 +492,67 @@ function theme.at_screen_connect(s)
     -- Create the wibox
     s.mywibox = awful.wibar({ position = "top", screen = s, height = 18, bg = theme.bg_normal, fg = theme.fg_normal })
 
-    systray = wibox.widget.systray()
-    systray.forced_width = 150
+    local panel = {}
+
+    if s.index == 1 then
+      systray = wibox.widget.systray()
+      systray.forced_width = 150
+      panel = { -- Right widgets
+            layout = wibox.layout.fixed.horizontal,
+            arrl_dr,
+            arrl_dl,
+            systray,
+            arrl_dr,
+            arrl_dl,
+            mykeyboardlayout,
+            volicon,
+            theme.volume.widget,
+            baticon,
+            bat.widget,
+            memicon,
+            mem.widget,
+            wibox.container.background(cpuicon, theme.bg_normal),
+            wibox.container.background(cpu.widget, theme.bg_normal),
+            tempicon,
+            temp.widget,
+            wibox.container.background(neticon, theme.bg_normal),
+            wibox.container.background(net.widget, theme.bg_normal),
+            theme.weather.icon,
+            theme.weather.widget,
+            spr,
+            clock,
+            spr,
+            --arrl_ld,
+            wibox.container.background(s.mylayoutbox, theme.bg_focus),
+        }
+    else       panel = { -- Right widgets
+            layout = wibox.layout.fixed.horizontal,
+            -- arrl_dr,
+            -- arrl_dl,
+            -- systray,
+            arrl_dr,
+            arrl_dl,
+            mykeyboardlayout,
+            volicon,
+            theme.volume.widget,
+            baticon,
+            bat.widget,
+            memicon,
+            mem.widget,
+            wibox.container.background(cpuicon, theme.bg_normal),
+            wibox.container.background(cpu.widget, theme.bg_normal),
+            tempicon,
+            temp.widget,
+            wibox.container.background(neticon, theme.bg_normal),
+            wibox.container.background(net.widget, theme.bg_normal),
+            theme.weather.icon,
+            theme.weather.widget,
+            spr,
+            clock,
+            spr,
+            wibox.container.background(s.mylayoutbox, theme.bg_focus),
+        }
+    end
 
     -- Add widgets to the wibox
     s.mywibox:setup {
@@ -499,41 +561,12 @@ function theme.at_screen_connect(s)
             layout = wibox.layout.fixed.horizontal,
             --spr,
             s.mytaglist,
+            arrl_dr,
+            arrl_dl,
             s.mypromptbox,
-            spr,
         },
         s.mytasklist, -- Middle widget
-        { -- Right widgets
-            layout = wibox.layout.fixed.horizontal,
-            spr,
-            systray,
-            spr,
-            --arrl_dl,
-            mykeyboardlayout,
-            volicon,
-            theme.volume.widget,
-            baticon,
-            bat.widget,
-            --arrl_dl,
-            memicon,
-            mem.widget,
-            --arrl_ld,
-            wibox.container.background(cpuicon, theme.bg_normal),
-            wibox.container.background(cpu.widget, theme.bg_normal),
-            --arrl_dl,
-            tempicon,
-            temp.widget,
-            --arrl_ld,
-            wibox.container.background(neticon, theme.bg_normal),
-            wibox.container.background(net.widget, theme.bg_normal),
-            --arrl_dl,
-                        theme.weather.icon,
-            theme.weather.widget,
-            clock,
-            spr,
-            --arrl_ld,
-            wibox.container.background(s.mylayoutbox, theme.bg_focus),
-        },
+        panel,
     }
 
     gears.timer.delayed_call(theme.vertical_wibox, s)

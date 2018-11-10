@@ -21,7 +21,7 @@ local freedesktop   = require("freedesktop")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
                       require("awful.hotkeys_popup.keys")
 local my_table      = awful.util.table or gears.table -- 4.{0,1} compatibility
-local vicious = require("vicious")
+
 -- }}}
 
 -- {{{ Error handling
