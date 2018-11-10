@@ -15,6 +15,7 @@ local naughty = require("naughty")
 --slocal os = { getenv = os.getenv }
 local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
 
+os.setlocale(os.getenv("LANG")) -- to localize the clock
 
 do
   local cmds =
@@ -177,6 +178,7 @@ local function notify_bar(procent)
     end
 end
 
+
 -- Textclock
 local clockicon = wibox.widget.imagebox(theme.widget_clock)
 local clock = awful.widget.watch(
@@ -189,6 +191,17 @@ local clock = awful.widget.watch(
           end)))
     end
 )
+
+-- Weather
+theme.weather = lain.widget.weather({
+    city_id = 572159, -- placeholder (London)
+    weather_na_markup = "", 
+    notification_preset = { font = "Monospace 10" },
+    settings = function()
+        units = math.floor(weather_now["main"]["temp"])
+        widget:set_markup(" " .. markup.font(theme.font, units .. "°C") .. " ")
+    end
+})
 
 -- Calendar
 theme.cal = lain.widget.cal({
@@ -230,19 +243,19 @@ local bat = lain.widget.bat({
         widget:buttons(my_table.join (
           awful.button({}, 4, function()
             run_once({"sudo xbacklight_set up", ""})
-    awful.spawn.with_line_callback("sudo xbacklight_set", {
-    stdout = function(line)
-        notify_bar(line)
-    end
-    })
-          end),
-          awful.button({}, 5, function()
+            awful.spawn.with_line_callback("sudo xbacklight_set", {
+            stdout = function(line)
+                notify_bar(line)
+            end
+            })
+            end),
+            awful.button({}, 5, function()
             run_once({"sudo xbacklight_set down", ""})
-    awful.spawn.with_line_callback("sudo xbacklight_set", {
-    stdout = function(line)
-        notify_bar(line)
-    end
-    })
+            awful.spawn.with_line_callback("sudo xbacklight_set", {
+            stdout = function(line)
+                notify_bar(line)
+            end
+            })
           end)))
     end
 })
@@ -395,8 +408,6 @@ function theme.vertical_wibox(s)
         table.insert(bar,  wibox.container.margin(app, 5, 8, 13, 0))
     end
 
-    gears.debug.dump(bar)
-
     -- Add widgets to the vertical wibox
     s.myleftwibox:setup {
         layout = wibox.layout.align.vertical,
@@ -516,6 +527,8 @@ function theme.at_screen_connect(s)
             wibox.container.background(neticon, theme.bg_normal),
             wibox.container.background(net.widget, theme.bg_normal),
             --arrl_dl,
+                        theme.weather.icon,
+            theme.weather.widget,
             clock,
             spr,
             --arrl_ld,

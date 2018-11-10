@@ -41,34 +41,69 @@ local function pipelines(...)
     end
 end
 
+local function spairs(t, order)
+    -- collect the keys
+    local keys = {}
+    for k in pairs(t) do keys[#keys+1] = k end
+
+    -- if order function given, sort by it by passing the table and keys a, b,
+    -- otherwise just sort the keys 
+    if order then
+        table.sort(keys, function(a,b) return order(t, a, b) end)
+    else
+        table.sort(keys)
+    end
+
+    -- return the iterator function
+    local i = 0
+    return function()
+        i = i + 1
+        if keys[i] then
+            return keys[i], t[keys[i]]
+        end
+    end
+end
+
 function menu.build()
     local res = {}
     local unique_entries = {}
     local dirs_parsed = 0
-
+    local apps = {}
+    apps['default'] = {}
     for _, dir in ipairs(menu_gen.all_menu_dirs) do
         local paths = pipelines('find '..dir..' -maxdepth 1 -type f')
         for path in paths do
             if path:find("%.desktop$") then
                 entry = menu_utils.parse_desktop_file(path)
-                if entry.show and entry.Name and entry.cmdline then
+                if entry.Name and entry.cmdline then
+                    if entry['categories'] ~= nil then if not apps[entry['categories'][1]] then apps[entry['categories'][1]] = {} end end
                     local unique_key = entry.Name .. '\0' .. entry.cmdline
                     if not unique_entries[unique_key] then
                         local name = menu_utils.rtrim(entry.Name) or ""
                         local cmdline = menu_utils.rtrim(entry.cmdline) or ""
                         local icon = entry.icon_path or nil
-                        wgt = wibox.widget.imagebox(icon)
-                        if cmdline:find(".*C:.*") then
-                            cmdline = cmdline:gsub("\\\\", '\\')
+                        if entry['categories'] ~= nil then 
+                            table.insert(apps[entry['categories'][1]], {name = name, cmdline = cmdline, icon = icon})
+                        else
+                            table.insert(apps['default'], {name = name, cmdline = cmdline, icon = icon})
                         end
-                        wgt:buttons(awful.button({ }, 1, nil, function()
-                            awful.spawn.with_shell(cmdline)
-                            end
-                            ))
-                        table.insert(res, wgt)
                         unique_entries[unique_key] = true
                     end
                 end
+            end
+        end
+
+        for k, v in spairs(apps) do
+            for _, a in pairs(v) do
+                wgt = wibox.widget.imagebox(a.icon)
+                if a.cmdline:find(".*C:.*") then
+                    a.cmdline = a.cmdline:gsub("\\\\", '\\')
+                end
+                wgt:buttons(awful.button({ }, 1, nil, function()
+                    awful.spawn.with_shell(a.cmdline)
+                    end
+                    ))
+                table.insert(res, wgt)
             end
         end
     end
