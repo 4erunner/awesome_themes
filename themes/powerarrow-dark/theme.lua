@@ -389,8 +389,8 @@ local net = lain.widget.net({
 -- Separators
 local spr     = wibox.widget.textbox(' ')
 
-local arrl_dl = separators.arrow_left(theme.bg_focus, "alpha")
-local arrl_dr = separators.arrow_right("alpha", theme.bg_focus)
+local arrl_dl = separators.arrow_left(theme.border_focus , "alpha")
+local arrl_dr = separators.arrow_right("alpha", theme.border_focus )
 
 function theme.vertical_wibox(s)
     -- Create the vertical wibox
