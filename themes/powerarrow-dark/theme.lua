@@ -103,6 +103,7 @@ theme.widget_vol                                = theme.dir .. "/icons/vol.png"
 theme.widget_vol_low                            = theme.dir .. "/icons/vol_low.png"
 theme.widget_vol_no                             = theme.dir .. "/icons/vol_no.png"
 theme.widget_vol_mute                           = theme.dir .. "/icons/vol_mute.png"
+theme.widget_sep                                = theme.dir .. "/icons/sep.png"
 theme.widget_mail                               = theme.dir .. "/icons/mail.png"
 theme.widget_mail_on                            = theme.dir .. "/icons/mail_on.png"
 theme.tasklist_spacing                          = 2
@@ -387,12 +388,16 @@ local net = lain.widget.net({
 })
 
 -- Separators
-local spr     = wibox.widget.textbox()
-spr.font = "xos4 Terminus 12"
-spr.markup =markup(theme.border_focus , '  ')
-
-local arrl_dl = separators.arrow_left(theme.border_focus , "alpha")
-local arrl_dr = separators.arrow_right("alpha", theme.border_focus )
+-- local spr     = wibox.widget.textbox()
+-- spr.font = "xos4 Terminus 18"
+-- spr.markup =markup(theme.border_focus , '][')
+local spr = wibox.widget.imagebox(theme.widget_sep)
+-- local spr_l     = wibox.widget.textbox()
+-- spr_l.font = "xos4 Terminus 18"
+-- spr_l.markup =markup(theme.border_focus , '[')
+-- local spr_r     = wibox.widget.textbox()
+-- spr_r.font = "xos4 Terminus 18"
+-- spr_r.markup =markup(theme.border_focus , ']')
 
 function theme.vertical_wibox(s)
     -- Create the vertical wibox
@@ -522,14 +527,10 @@ function theme.at_screen_connect(s)
             spr,
             clock,
             spr,
-            --arrl_ld,
             wibox.container.background(s.mylayoutbox, theme.bg_focus),
         }
     else       panel = { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
-            -- arrl_dr,
-            -- arrl_dl,
-            -- systray,
             spr,
             mykeyboardlayout,
             volicon,
@@ -550,6 +551,7 @@ function theme.at_screen_connect(s)
             clock,
             spr,
             wibox.container.background(s.mylayoutbox, theme.bg_focus),
+            spr_r,
         }
     end
 
@@ -558,7 +560,6 @@ function theme.at_screen_connect(s)
         layout = wibox.layout.align.horizontal,
         { -- Left widgets
             layout = wibox.layout.fixed.horizontal,
-            --spr,
             s.mytaglist,
             spr,
             s.mypromptbox,
