@@ -143,7 +143,9 @@ local mylauncher2 = awful.widget.button({image = theme.awesome_icon})
 mylauncher2:connect_signal("button::press", function() awful.util.mymainmenu:toggle() end)
 
 local dockshape = function(cr, width, height)
-    gears.shape.partially_rounded_rect(cr, width, height, false, true, true, false, 6)
+    -- gears.shape.partially_rounded_rect(cr, width, height, false, true, true, false, 6)
+    gears.shape.octogon(cr,width, height, height/ 5)
+    gears.shape.transform(gears.shape.octogon) : translate(0, 25) (cr,width, height)
 end
 
 local function notify_bar(procent)
@@ -197,9 +199,10 @@ local clock = awful.widget.watch(
 
 -- Weather
 theme.weather = lain.widget.weather({
-    city_id = 572159, -- placeholder (London)
+    city_id = 523750, -- NChelny
     weather_na_markup = "", 
     notification_preset = { font = "Monospace 10" },
+    lang = "ru",
     settings = function()
         units = math.floor(weather_now["main"]["temp"])
         widget:set_markup(" " .. markup.font(theme.font, units .. "°C") .. " ")
@@ -401,26 +404,37 @@ local spr = wibox.widget.imagebox(theme.widget_sep)
 
 function theme.vertical_wibox(s)
     -- Create the vertical wibox
-    s.dockheight = (80 *  s.workarea.height)/100
+    -- s.dockheight = (80 *  s.workarea.height)/100
 
-    s.myleftwibox = wibox({ screen = s, x=0, y=s.workarea.height/2 - s.dockheight/2, width = 1, height = s.dockheight, fg = theme.fg_normal, bg = barcolor2, ontop = true, visible = true, type = "dock" })
+    s.dockwidth = (80 *  s.workarea.width)/100
+    s.dockheight = s.geometry.height
 
-    if s.index > 1 and s.myleftwibox.y == 0 then
+    -- s.myleftwibox = wibox({ screen = s, x=0, y=s.workarea.height/2 - s.dockheight/2, width = 1, height = s.dockheight, fg = theme.fg_normal, bg = barcolor2, ontop = true, visible = true, type = "dock" })
+
+    s.myleftwibox = wibox({ screen = s, x=s.workarea.width/2 - s.dockwidth/2, y=s.dockheight-1, width = s.dockwidth, height = 1, fg = theme.fg_normal, bg = barcolor2, ontop = true, visible = true, type = "dock" })
+
+    if s.index > 1 then
+        -- s.myleftwibox.y = screen[1].myleftwibox.y
         s.myleftwibox.y = screen[1].myleftwibox.y
+        s.myleftwibox.x = s.myleftwibox.x + (s.workarea.width - s.dockwidth)/2
     end
     
-    appmenu = appbar.menu.build()
+    if s.appmenu == nil then
+      s.appmenu = appbar.menu.build()
+    end
 
-    bar = {layout = wibox.layout.fixed.vertical}
+    -- bar = {layout = wibox.layout.fixed.vertical}
+    bar = {layout = wibox.layout.fixed.horizontal}
     table.insert(bar, wibox.container.margin(mylauncher2, 5, 8, 13, 0))
 
-    for _, app in pairs(appmenu) do
+    for _, app in pairs(s.appmenu) do
         table.insert(bar,  wibox.container.margin(app, 5, 8, 13, 0))
     end
 
     -- Add widgets to the vertical wibox
     s.myleftwibox:setup {
-        layout = wibox.layout.align.vertical,
+        -- layout = wibox.layout.align.vertical,
+        layout = wibox.layout.fixed.horizontal,
         bar,
     }
 
@@ -428,7 +442,8 @@ function theme.vertical_wibox(s)
     s.docktimer = gears.timer{ timeout = 5 }
     s.docktimer:connect_signal("timeout", function()
         local s = awful.screen.focused()
-        s.myleftwibox.width = 1
+        s.myleftwibox.height = 1
+        s.myleftwibox.y = s.dockheight - 1
         --mylauncher2.visible = false
         if s.docktimer.started then
             s.docktimer:stop()
@@ -446,7 +461,9 @@ function theme.vertical_wibox(s)
 
     s.myleftwibox:connect_signal("mouse::leave", function()
         local s = awful.screen.focused()
-        s.myleftwibox.width = 1
+        -- s.myleftwibox.width = 1
+        s.myleftwibox.height = 1
+        s.myleftwibox.y = s.dockheight - 1 
         --mylauncher2.visible = false
         gears.surface.apply_shape_bounding(s.myleftwibox, dockshape)
         if not s.docktimer.started then
@@ -456,7 +473,8 @@ function theme.vertical_wibox(s)
 
     s.myleftwibox:connect_signal("mouse::enter", function()
         local s = awful.screen.focused()
-        s.myleftwibox.width = 38
+        s.myleftwibox.height = 40
+        s.myleftwibox.y = s.dockheight - 40
         gears.surface.apply_shape_bounding(s.myleftwibox, dockshape)
        if s.docktimer.started then
             s.docktimer:stop()
@@ -510,6 +528,7 @@ function theme.at_screen_connect(s)
             systray,
             spr,
             mykeyboardlayout,
+            spr,
             volicon,
             theme.volume.widget,
             baticon,
@@ -522,9 +541,9 @@ function theme.at_screen_connect(s)
             temp.widget,
             wibox.container.background(neticon, theme.bg_normal),
             wibox.container.background(net.widget, theme.bg_normal),
+            spr,
             theme.weather.icon,
             theme.weather.widget,
-            spr,
             clock,
             spr,
             wibox.container.background(s.mylayoutbox, theme.bg_focus),
@@ -533,6 +552,7 @@ function theme.at_screen_connect(s)
             layout = wibox.layout.fixed.horizontal,
             spr,
             mykeyboardlayout,
+            spr,
             volicon,
             theme.volume.widget,
             baticon,
@@ -545,9 +565,9 @@ function theme.at_screen_connect(s)
             temp.widget,
             wibox.container.background(neticon, theme.bg_normal),
             wibox.container.background(net.widget, theme.bg_normal),
+            spr,
             theme.weather.icon,
             theme.weather.widget,
-            spr,
             clock,
             spr,
             wibox.container.background(s.mylayoutbox, theme.bg_focus),
