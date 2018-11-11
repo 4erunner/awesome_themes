@@ -45,8 +45,8 @@ awful.spawn.with_shell("sleep 2 && klipper")
 local tasklist_shape = function(cr, width, height)
     --gears.shape.rounded_rect(cr,width,height, 5)
     --gears.shape.transform(gears.shape.rounded_rect) : translate(0,25) (cr,width,height, 5)
-    gears.shape.hexagon(cr, width, height)
-    gears.shape.transform(gears.shape.hexagon) : translate(0,25)(cr,width, height)
+    gears.shape.octogon(cr,width, height, height/ 3.5)
+    gears.shape.transform(gears.shape.octogon) : translate(0, 25) (cr,width, height)
 end
 
 
@@ -387,7 +387,9 @@ local net = lain.widget.net({
 })
 
 -- Separators
-local spr     = wibox.widget.textbox(' ')
+local spr     = wibox.widget.textbox()
+spr.font = "xos4 Terminus 12"
+spr.markup =markup(theme.border_focus , '  ')
 
 local arrl_dl = separators.arrow_left(theme.border_focus , "alpha")
 local arrl_dr = separators.arrow_right("alpha", theme.border_focus )
@@ -499,11 +501,9 @@ function theme.at_screen_connect(s)
       systray.forced_width = 150
       panel = { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
-            arrl_dr,
-            arrl_dl,
+            spr,
             systray,
-            arrl_dr,
-            arrl_dl,
+            spr,
             mykeyboardlayout,
             volicon,
             theme.volume.widget,
@@ -530,8 +530,7 @@ function theme.at_screen_connect(s)
             -- arrl_dr,
             -- arrl_dl,
             -- systray,
-            arrl_dr,
-            arrl_dl,
+            spr,
             mykeyboardlayout,
             volicon,
             theme.volume.widget,
@@ -561,8 +560,7 @@ function theme.at_screen_connect(s)
             layout = wibox.layout.fixed.horizontal,
             --spr,
             s.mytaglist,
-            arrl_dr,
-            arrl_dl,
+            spr,
             s.mypromptbox,
         },
         s.mytasklist, -- Middle widget
