@@ -406,7 +406,13 @@ function theme.vertical_wibox(s)
     -- Create the vertical wibox
     -- s.dockheight = (80 *  s.workarea.height)/100
 
-    s.dockwidth = (80 *  s.workarea.width)/100
+    if s.appmenu == nil then
+      s.appmenu = appbar.menu.build()
+    end
+
+    gears.debug.dump(#s.appmenu)
+
+    s.dockwidth = (#s.appmenu * 42) 
     s.dockheight = s.geometry.height
 
     -- s.myleftwibox = wibox({ screen = s, x=0, y=s.workarea.height/2 - s.dockheight/2, width = 1, height = s.dockheight, fg = theme.fg_normal, bg = barcolor2, ontop = true, visible = true, type = "dock" })
@@ -419,16 +425,14 @@ function theme.vertical_wibox(s)
         s.myleftwibox.x = s.myleftwibox.x + (s.workarea.width - s.dockwidth)/2
     end
     
-    if s.appmenu == nil then
-      s.appmenu = appbar.menu.build()
-    end
+
 
     -- bar = {layout = wibox.layout.fixed.vertical}
     bar = {layout = wibox.layout.fixed.horizontal}
-    table.insert(bar, wibox.container.margin(mylauncher2, 5, 8, 13, 0))
+    table.insert(bar, wibox.container.margin(mylauncher2, 5, 5, 5, 5))
 
     for _, app in pairs(s.appmenu) do
-        table.insert(bar,  wibox.container.margin(app, 5, 8, 13, 0))
+        table.insert(bar,  wibox.container.margin(app, 5, 5, 5, 5))
     end
 
     -- Add widgets to the vertical wibox
