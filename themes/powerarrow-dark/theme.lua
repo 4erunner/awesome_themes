@@ -518,7 +518,7 @@ function theme.vertical_wibox(s)
         local s = awful.screen.focused()
         local bg_opacity = ""
         if xcomp then
-          bg_opacity = "00"
+          bg_opacity = "88"
         end
         s.myleftwibox.bg = theme.bg_normal .. bg_opacity
         s.myleftwibox.height = 40
