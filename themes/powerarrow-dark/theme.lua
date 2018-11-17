@@ -49,6 +49,20 @@ local tasklist_shape = function(cr, width, height)
     gears.shape.transform(gears.shape.octogon) : translate(0, 25) (cr,width, height)
 end
 
+local xcomp = false
+
+awful.spawn.with_line_callback(os.getenv("HOME") .. "/.config/awesome/xcomp.sh", {
+stdout = function(line)
+    gears.debug.dump(line)
+    if line == "1" then
+      xcomp = true
+    end
+end
+})
+
+ gears.debug.dump(xcom)
+
+local opacity_bg = ""
 
 
 local theme                                     = {}
@@ -59,10 +73,10 @@ theme.font                                      = "xos4 Terminus 9"
 theme.fg_normal                                 = "#DDDDFF"
 theme.fg_focus                                  = "#EA6F81"
 theme.fg_urgent                                 = "#CC9393"
-theme.bg_normal                                 = "#1A1A1A"
+theme.bg_normal                                 = "#1A1A1A" .. opacity_bg
 theme.bg_focus                                  = "#313131"
-theme.bg_urgent                                 = "#1A1A1A"
-theme.bg_systray                                = "#1A1A1A"
+theme.bg_urgent                                 = "#1A1A1A" .. opacity_bg
+theme.bg_systray                                = "#1A1A1A" .. opacity_bg
 theme.border_width                              = 1
 theme.border_normal                             = "#3F3F3F"
 theme.border_focus                              = "#7F7F7F"
@@ -135,6 +149,7 @@ theme.titlebar_maximized_button_normal_active   = theme.dir .. "/icons/titlebar/
 theme.titlebar_maximized_button_focus_inactive  = theme.dir .. "/icons/titlebar/maximized_focus_inactive.png"
 theme.titlebar_maximized_button_normal_inactive = theme.dir .. "/icons/titlebar/maximized_normal_inactive.png"
 
+
 local markup = lain.util.markup
 local separators = lain.util.separators
 
@@ -150,7 +165,6 @@ end
 
 local function notify_bar(procent)
     preset = { font = "Monospace 12", fg = theme.fg_normal }
-    gears.debug.dump(procent)
     preset.title = string.format("%s - %s%%", "backlight", procent)
 
     -- -- tot is the maximum number of ticks to display in the notification
@@ -191,9 +205,13 @@ local clock = awful.widget.watch(
     function(widget, stdout)
         widget:set_markup(" " .. markup.font(theme.font, stdout))
         widget:buttons(my_table.join (
-          awful.button({}, 1, function()
+                    awful.button({}, 1, function()
+            run_once({"korganizer", ""})
+          end),
+          awful.button({}, 3, function()
             run_once({"kdesu timeset-gui", ""})
-          end)))
+          end)
+          ))
     end
 )
 
@@ -410,14 +428,22 @@ function theme.vertical_wibox(s)
       s.appmenu = appbar.menu.build()
     end
 
-    gears.debug.dump(#s.appmenu)
-
     s.dockwidth = (#s.appmenu * 42) 
     s.dockheight = s.geometry.height
 
     -- s.myleftwibox = wibox({ screen = s, x=0, y=s.workarea.height/2 - s.dockheight/2, width = 1, height = s.dockheight, fg = theme.fg_normal, bg = barcolor2, ontop = true, visible = true, type = "dock" })
 
-    s.myleftwibox = wibox({ screen = s, x=s.workarea.width/2 - s.dockwidth/2, y=s.dockheight-1, width = s.dockwidth, height = 1, fg = theme.fg_normal, bg = barcolor2, ontop = true, visible = true, type = "dock" })
+    s.myleftwibox = wibox({ 
+      screen = s, 
+      x=s.workarea.width/2 - s.dockwidth/2, 
+      y=s.dockheight-1, 
+      width = s.dockwidth, 
+      height = 1, 
+      fg = theme.fg_normal, 
+      bg = theme.bg_normal, 
+      ontop = true, 
+      visible = true, 
+      type = "dock"})
 
     if s.index > 1 then
         -- s.myleftwibox.y = screen[1].myleftwibox.y
@@ -429,10 +455,23 @@ function theme.vertical_wibox(s)
 
     -- bar = {layout = wibox.layout.fixed.vertical}
     bar = {layout = wibox.layout.fixed.horizontal}
-    table.insert(bar, wibox.container.margin(mylauncher2, 5, 5, 5, 5))
+    table.insert(bar, wibox.container.margin(mylauncher2, 8, 8, 8, 8))
 
     for _, app in pairs(s.appmenu) do
-        table.insert(bar,  wibox.container.margin(app, 5, 5, 5, 5))
+        appcont = wibox.container.margin(app, 8, 8, 8, 8)
+        appcont:connect_signal ("mouse::enter", function(cont)
+          cont.margins = 0
+        end)
+        appcont:connect_signal ("mouse::leave", function(cont)
+          cont.margins = 8
+        end)
+         appcont:connect_signal ("button::press", function(cont)
+          cont.margins = 10
+        end)
+        appcont:connect_signal ("button::release", function(cont)
+          cont.margins = 0
+        end)
+        table.insert(bar, appcont)
     end
 
     -- Add widgets to the vertical wibox
@@ -477,6 +516,11 @@ function theme.vertical_wibox(s)
 
     s.myleftwibox:connect_signal("mouse::enter", function()
         local s = awful.screen.focused()
+        local bg_opacity = ""
+        if xcomp then
+          bg_opacity = "00"
+        end
+        s.myleftwibox.bg = theme.bg_normal .. bg_opacity
         s.myleftwibox.height = 40
         s.myleftwibox.y = s.dockheight - 40
         gears.surface.apply_shape_bounding(s.myleftwibox, dockshape)
@@ -519,7 +563,7 @@ function theme.at_screen_connect(s)
     s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, awful.util.tasklist_buttons)
 
     -- Create the wibox
-    s.mywibox = awful.wibar({ position = "top", screen = s, height = 18, bg = theme.bg_normal, fg = theme.fg_normal })
+    s.mywibox = awful.wibar({ position = "top", screen = s, height = 18, bg = theme.bg_normal , fg = theme.fg_normal })
 
     local panel = {}
 
@@ -550,7 +594,7 @@ function theme.at_screen_connect(s)
             theme.weather.widget,
             clock,
             spr,
-            wibox.container.background(s.mylayoutbox, theme.bg_focus),
+            wibox.container.background(s.mylayoutbox, theme.bg_normal),
         }
     else       panel = { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
@@ -574,7 +618,7 @@ function theme.at_screen_connect(s)
             theme.weather.widget,
             clock,
             spr,
-            wibox.container.background(s.mylayoutbox, theme.bg_focus),
+            wibox.container.background(s.mylayoutbox, theme.bg_normal),
             spr_r,
         }
     end
@@ -593,6 +637,7 @@ function theme.at_screen_connect(s)
     }
 
     gears.timer.delayed_call(theme.vertical_wibox, s)
+
 end
 
 return theme
