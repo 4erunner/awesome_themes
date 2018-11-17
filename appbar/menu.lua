@@ -99,11 +99,7 @@ function menu.build()
                 if a.cmdline:find(".*C:.*") then
                     a.cmdline = a.cmdline:gsub("\\\\", '\\')
                 end
-                wgt:buttons(awful.button({ }, 1, nil, function()
-                    awful.spawn.with_shell(a.cmdline)
-                    end
-                    ))
-                table.insert(res, wgt)
+                table.insert(res, { widget = wgt, cmdline = a.cmdline})
             end
         end
     end

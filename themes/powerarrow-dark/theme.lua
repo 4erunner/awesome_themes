@@ -458,7 +458,11 @@ function theme.vertical_wibox(s)
     table.insert(bar, wibox.container.margin(mylauncher2, 8, 8, 8, 8))
 
     for _, app in pairs(s.appmenu) do
-        appcont = wibox.container.margin(app, 8, 8, 8, 8)
+        appcont = wibox.container.margin(app.widget, 8, 8, 8, 8)
+        appcont:buttons(awful.button({ }, 1, nil, function()
+          awful.spawn.with_shell(app.cmdline)
+          end
+        ))
         appcont:connect_signal ("mouse::enter", function(cont)
           cont.margins = 0
         end)
