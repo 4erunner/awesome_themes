@@ -23,6 +23,7 @@ do
     "xfce4-power-manager",
     "nm-applet",
     "blueman-applet",
+    "xcompmgr -nC"
     --"kmix"
   }
 
@@ -60,10 +61,6 @@ stdout = function(line)
 end
 })
 
- gears.debug.dump(xcom)
-
-local opacity_bg = ""
-
 
 local theme                                     = {}
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/powerarrow-dark"
@@ -73,10 +70,10 @@ theme.font                                      = "xos4 Terminus 9"
 theme.fg_normal                                 = "#DDDDFF"
 theme.fg_focus                                  = "#EA6F81"
 theme.fg_urgent                                 = "#CC9393"
-theme.bg_normal                                 = "#1A1A1A" .. opacity_bg
+theme.bg_normal                                 = "#1A1A1A" 
 theme.bg_focus                                  = "#313131"
-theme.bg_urgent                                 = "#1A1A1A" .. opacity_bg
-theme.bg_systray                                = "#1A1A1A" .. opacity_bg
+theme.bg_urgent                                 = "#1A1A1A"
+theme.bg_systray                                = "#1A1A1A"
 theme.border_width                              = 1
 theme.border_normal                             = "#3F3F3F"
 theme.border_focus                              = "#7F7F7F"
@@ -408,6 +405,13 @@ local net = lain.widget.net({
     end
 })
 
+local locdisplay = wibox.widget.textbox()
+locdisplay.font = "xos4 Terminus 10"
+locdisplay.markup =markup(theme.fg_urgent  , '')
+locdisplay:buttons(my_table.join (
+          awful.button({}, 1, function()
+            run_once({"/usr/bin/dm-tool switch-to-greeter", ""})
+          end)))
 -- Separators
 -- local spr     = wibox.widget.textbox()
 -- spr.font = "xos4 Terminus 18"
@@ -587,18 +591,20 @@ function theme.at_screen_connect(s)
             bat.widget,
             memicon,
             mem.widget,
-            wibox.container.background(cpuicon, theme.bg_normal),
-            wibox.container.background(cpu.widget, theme.bg_normal),
+            cpuicon, 
+            cpu.widget, 
             tempicon,
             temp.widget,
-            wibox.container.background(neticon, theme.bg_normal),
-            wibox.container.background(net.widget, theme.bg_normal),
+            neticon,
+            net.widget,
             spr,
             theme.weather.icon,
             theme.weather.widget,
             clock,
             spr,
-            wibox.container.background(s.mylayoutbox, theme.bg_normal),
+            s.mylayoutbox,
+            spr,
+            locdisplay,
         }
     else       panel = { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
@@ -611,19 +617,20 @@ function theme.at_screen_connect(s)
             bat.widget,
             memicon,
             mem.widget,
-            wibox.container.background(cpuicon, theme.bg_normal),
-            wibox.container.background(cpu.widget, theme.bg_normal),
+            cpuicon, 
+            cpu.widget, 
             tempicon,
             temp.widget,
-            wibox.container.background(neticon, theme.bg_normal),
-            wibox.container.background(net.widget, theme.bg_normal),
+            neticon, 
+            net.widget, 
             spr,
             theme.weather.icon,
             theme.weather.widget,
             clock,
             spr,
-            wibox.container.background(s.mylayoutbox, theme.bg_normal),
-            spr_r,
+            s.mylayoutbox,
+            spr,
+            locdisplay,
         }
     end
 
@@ -641,6 +648,20 @@ function theme.at_screen_connect(s)
     }
 
     gears.timer.delayed_call(theme.vertical_wibox, s)
+
+    -- gears.timer {
+    -- timeout   = 60,
+    -- autostart = true,
+    -- callback  = function()
+    --     -- You should read it from `/sys/class/power_supply/` (on Linux)
+    --     -- instead of spawning a shell. This is only an example.
+    --     local bg_opacity = ""
+    --     if xcomp then
+    --       bg_opacity = "88"
+    --     end
+    --     s.mywibox.bg = theme.bg_normal .. bg_opacity
+    -- end
+    -- }
 
 end
 
