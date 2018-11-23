@@ -407,7 +407,7 @@ local net = lain.widget.net({
 
 local locdisplay = wibox.widget.textbox()
 locdisplay.font = "xos4 Terminus 10"
-locdisplay.markup =markup(theme.fg_urgent  , '')
+locdisplay.markup =markup('red'  , '')
 locdisplay:buttons(my_table.join (
           awful.button({}, 1, function()
             run_once({"/usr/bin/dm-tool switch-to-greeter", ""})
@@ -598,13 +598,14 @@ function theme.at_screen_connect(s)
             neticon,
             net.widget,
             spr,
+            locdisplay,
+            spr,
             theme.weather.icon,
             theme.weather.widget,
             clock,
             spr,
             s.mylayoutbox,
-            spr,
-            locdisplay,
+
         }
     else       panel = { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
@@ -622,15 +623,16 @@ function theme.at_screen_connect(s)
             tempicon,
             temp.widget,
             neticon, 
-            net.widget, 
+            net.widget,
+            spr,
+            locdisplay,
             spr,
             theme.weather.icon,
             theme.weather.widget,
             clock,
             spr,
             s.mylayoutbox,
-            spr,
-            locdisplay,
+
         }
     end
 

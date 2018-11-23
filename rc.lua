@@ -569,8 +569,14 @@ globalkeys = my_table.join(
                     history_path = awful.util.get_cache_dir() .. "/history_eval"
                   }
               end,
-              {description = "lua execute prompt", group = "awesome"})
+              {description = "lua execute prompt", group = "awesome"}),
     --]]
+
+    -- XCOMPMRG toggle
+
+    awful.key({ altkey, "Control" }, "End", function () awful.spawn.with_shell(os.getenv("HOME") .. "/.config/awesome/xcomp_toggle.sh") end,
+              {description = "xcompmrg toggle", group = "screen"})
+
 )
 
 clientkeys = my_table.join(
