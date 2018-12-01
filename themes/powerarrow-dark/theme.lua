@@ -245,7 +245,7 @@ local bat = lain.widget.bat({
                 return
             elseif not bat_now.perc and tonumber(bat_now.perc) <= 5 then
                 baticon:set_image(theme.widget_battery_empty)
-                aughty.notify({ preset = naughty.config.presets.critical,
+                naughty.notify({ preset = naughty.config.presets.critical,
                      title = "Warning!",
                      text = "Battery is EMPTY" })
             elseif not bat_now.perc and tonumber(bat_now.perc) <= 15 then
@@ -349,6 +349,10 @@ tempicon:buttons(my_table.join (
           awful.button({}, 1, function()
             run_once({"gkrellm", ""})
           end)))
+
+
+local bbswwitch = wibox.widget.textbox()
+
 
 -- ALSA volume
 local volicon = wibox.widget.imagebox(theme.widget_vol)
@@ -595,6 +599,7 @@ function theme.at_screen_connect(s)
             cpu.widget, 
             tempicon,
             temp.widget,
+            bbswwitch,
             neticon,
             net.widget,
             spr,
@@ -622,6 +627,7 @@ function theme.at_screen_connect(s)
             cpu.widget, 
             tempicon,
             temp.widget,
+            bbswwitch,
             neticon, 
             net.widget,
             spr,
@@ -664,6 +670,25 @@ function theme.at_screen_connect(s)
     --     s.mywibox.bg = theme.bg_normal .. bg_opacity
     -- end
     -- }
+
+    gears.timer {
+    timeout   = 5,
+    autostart = true,
+    callback  = function()
+        -- You should read it from `/sys/class/power_supply/` (on Linux)
+        -- instead of spawning a shell. This is only an example.
+        awful.spawn.with_line_callback(os.getenv("HOME") .. "/.config/awesome/bbswitch.sh", {
+        stdout = function(line)
+            if line == "1" then
+              bbswwitch.markup = markup('red', '')
+            else
+              bbswwitch.markup = markup('red', '')
+            end
+        end
+        })
+    end
+    }
+ 
 
 end
 
