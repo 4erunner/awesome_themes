@@ -248,11 +248,13 @@ local bat = lain.widget.bat({
                 naughty.notify({ preset = naughty.config.presets.critical,
                      title = "Warning!",
                      text = "Battery is EMPTY" })
+                awful.spawn.with_shell("mpg123 " .. os.getenv("HOME") .. "/.config/awesome/BatteryLowAler.mp3")
             elseif not bat_now.perc and tonumber(bat_now.perc) <= 15 then
                 baticon:set_image(theme.widget_battery_low)
                 naughty.notify({ preset = naughty.config.presets.critical,
                      title = "Warning!",
                      text = "Battery is LOW" })
+                awful.spawn.with_shell("mpg123 " .. os.getenv("HOME") .. "/.config/awesome/BatteryLowAler.mp3")
             else
                 baticon:set_image(theme.widget_battery)
             end
