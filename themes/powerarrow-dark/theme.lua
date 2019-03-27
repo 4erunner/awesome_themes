@@ -23,7 +23,8 @@ do
     "xfce4-power-manager",
     "nm-applet",
     "blueman-applet",
-    "xcompmgr -nC"
+    -- "xcompmgr -nC"
+    "compton -r 0 -fC -l 0 -t 0 -D 1 -I 0.1 -O 0.1"
     --"kmix"
   }
 
@@ -243,13 +244,13 @@ local bat = lain.widget.bat({
                 widget:set_markup(markup.font(theme.font, " AC "))
                 baticon:set_image(theme.widget_ac)
                 return
-            elseif tonumber(bat_now.perc) <= 10 then
-                baticon:set_image(theme.widget_battery_empty)
-                naughty.notify({ preset = naughty.config.presets.critical,
-                     title = "Warning!",
-                     text = "Battery is EMPTY" })
-                awful.spawn.with_shell("paplay " .. os.getenv("HOME") .. "/.config/awesome/BatteryLowAler.wav")
-            elseif tonumber(bat_now.perc) <= 20 then
+            -- elseif tonumber(bat_now.perc) <= 10 then
+            --     baticon:set_image(theme.widget_battery_empty)
+            --     naughty.notify({ preset = naughty.config.presets.critical,
+            --          title = "Warning!",
+            --          text = "Battery is EMPTY" })
+            --     awful.spawn.with_shell("paplay " .. os.getenv("HOME") .. "/.config/awesome/BatteryLowAler.wav")
+            elseif tonumber(bat_now.perc) <= 15 then
                 baticon:set_image(theme.widget_battery_low)
                 naughty.notify({ preset = naughty.config.presets.critical,
                      title = "Warning!",
@@ -413,7 +414,7 @@ local net = lain.widget.net({
 
 local locdisplay = wibox.widget.textbox()
 locdisplay.font = "xos4 Terminus 10"
-locdisplay.markup =markup('red'  , '')
+locdisplay.markup =markup('red'  ,'')
 locdisplay:buttons(my_table.join (
           awful.button({}, 1, function()
             run_once({"/usr/bin/dm-tool switch-to-greeter", ""})

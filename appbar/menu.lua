@@ -18,6 +18,7 @@ local gls        = require("gears.filesystem")
 local gears      = require("gears")
 local wibox      = require("wibox")
 local awful      = require("awful")
+local naughty       = require("naughty")
 
 local pairs, string, table, os = pairs, string, table, os
 
@@ -75,7 +76,7 @@ function menu.build()
         for path in paths do
             if path:find("%.desktop$") then
                 entry = menu_utils.parse_desktop_file(path)
-                if entry.Name and entry.cmdline then
+                if entry and entry.Name and entry.cmdline then
                     if entry['categories'] ~= nil then if not apps[entry['categories'][1]] then apps[entry['categories'][1]] = {} end end
                     local unique_key = entry.Name .. '\0' .. entry.cmdline
                     if not unique_entries[unique_key] then
@@ -89,6 +90,11 @@ function menu.build()
                         end
                         unique_entries[unique_key] = true
                     end
+                else
+                    naughty.notify({ preset = naughty.config.presets.critical,
+                     title = "Bad desctop file!",
+                     text = string.format("path: %s", path) })
+
                 end
             end
         end
@@ -97,7 +103,9 @@ function menu.build()
             for _, a in pairs(v) do
                 wgt = wibox.widget.imagebox(a.icon)
                 if a.cmdline:find(".*C:.*") then
-                    a.cmdline = a.cmdline:gsub("\\\\", '\\')
+                    naughty.notify({ preset = naughty.config.presets.critical,
+                     title = "Bad desctop file!",
+                     text = string.format("path: %s - change on linux path", a.cmdline) })
                 end
                 table.insert(res, { widget = wgt, cmdline = a.cmdline})
             end
