@@ -23,8 +23,8 @@ do
     "xfce4-power-manager",
     "nm-applet",
     "blueman-applet",
-    -- "xcompmgr -nC"
-    "compton -r 0 -fC -l 0 -t 0 -D 1 -I 0.1 -O 0.1"
+    "xcompmgr -nC"
+    -- "compton -r 0 -fC -l 0 -t 0 -D 1 -I 0.1 -O 0.1"
     --"kmix"
   }
 
