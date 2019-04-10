@@ -1,6 +1,7 @@
 #!/bin/bash
 
-xcomp_exec=$( pgrep compton ) #xcomp_exec=$( pgrep xcompmgr )
+#xcomp_exec=$( pgrep compton )
+xcomp_exec=$( pgrep xcompmgr )
 
 echo $xcomp_exec
 
