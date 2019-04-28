@@ -381,8 +381,9 @@ volicon:buttons(my_table.join (
             run_once({"pavucontrol", ""})
           end),
           awful.button({}, 2, function()
-            os.execute(string.format("%s set %s 100%%", theme.volume.cmd, theme.volume.channel))
-            theme.volume.notify()
+            -- os.execute(string.format("%s set %s 100%%", theme.volume.cmd, theme.volume.channel))
+            -- theme.volume.notify()
+            run_once({"qpaeq", ""})
           end),
           awful.button({}, 3, function()
             os.execute(string.format("%s set %s toggle", theme.volume.cmd, theme.volume.togglechannel or theme.volume.channel))
