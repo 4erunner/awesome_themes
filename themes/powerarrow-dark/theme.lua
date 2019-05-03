@@ -62,6 +62,9 @@ stdout = function(line)
 end
 })
 
+-- HACK xcomp dont update notify power_supply
+local timeout_popup_notify = 0.4
+
 
 local theme                                     = {}
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/powerarrow-dark"
@@ -188,6 +191,7 @@ local function notify_bar(procent)
     if not notification then
       notification = naughty.notify {
             preset  = preset,
+            timeout =  timeout_popup_notify,
             destroy = function() notification = nil end
         }
     else 
@@ -360,7 +364,7 @@ local bbswwitch = wibox.widget.textbox()
 -- ALSA volume
 local volicon = wibox.widget.imagebox(theme.widget_vol)
 theme.volume = lain.widget.alsabar({
-    notification_preset = { font = "Monospace 12", fg = theme.fg_normal },
+    notification_preset = { font = "Monospace 12", fg = theme.fg_normal, timeout = timeout_popup_notify },
     settings = function()
         if volume_now.status == "off" then
             volicon:set_image(theme.widget_vol_mute)
