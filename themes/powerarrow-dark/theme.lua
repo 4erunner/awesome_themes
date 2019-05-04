@@ -421,9 +421,17 @@ local locdisplay = wibox.widget.textbox()
 locdisplay.font = "xos4 Terminus 10"
 locdisplay.markup =markup('red'  ,'')
 locdisplay:buttons(my_table.join (
-          awful.button({}, 1, function()
-            run_once({"/usr/bin/dm-tool switch-to-greeter", ""})
-          end)))
+	awful.button({}, 1, 
+		function()
+		run_once({"/usr/bin/dm-tool switch-to-greeter", ""})
+		end
+	),
+	awful.button({}, 3, 
+		function()
+			run_once({"poweroff --reboot", ""})
+		end
+	)
+))
 -- Separators
 -- local spr     = wibox.widget.textbox()
 -- spr.font = "xos4 Terminus 18"
