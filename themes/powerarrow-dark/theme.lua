@@ -68,7 +68,7 @@ local timeout_popup_notify = 0.4
 
 local theme                                     = {}
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/powerarrow-dark"
-theme.wallpaper                                 = theme.dir .. "/1920x1080.jpg"--"/wall.png"
+theme.wallpaper                                 = theme.dir .. "/1920x1080-2.png"--"/wall.png"
 theme.awesome_icon                              = theme.dir .. "/icons//awesome.png"
 theme.font                                      = "xos4 Terminus 9"
 theme.fg_normal                                 = "#DDDDFF"
@@ -331,13 +331,13 @@ local cpu = lain.widget.cpu({
         widget.forced_width = 30
         widget:buttons(my_table.join (
           awful.button({}, 1, function()
-            run_once({"i-nex", ""})
+            run_once({"hardinfo", ""})
           end)))
     end
 })
 cpuicon:buttons(my_table.join (
           awful.button({}, 1, function()
-            run_once({"i-nex", ""})
+            run_once({"hardinfo", ""})
           end)))
 
 -- Coretemp
@@ -348,13 +348,13 @@ local temp = lain.widget.temp({
         widget.forced_width = 50
         widget:buttons(my_table.join (
           awful.button({}, 1, function()
-            run_once({"gkrellm", ""})
+            run_once({"konsole -e 'glances'", ""})
           end)))
     end
 })
 tempicon:buttons(my_table.join (
           awful.button({}, 1, function()
-            run_once({"gkrellm", ""})
+            run_once({"konsole -e 'glances'", ""})
           end)))
 
 
@@ -385,9 +385,9 @@ volicon:buttons(my_table.join (
             run_once({"pavucontrol", ""})
           end),
           awful.button({}, 2, function()
-            -- os.execute(string.format("%s set %s 100%%", theme.volume.cmd, theme.volume.channel))
-            -- theme.volume.notify()
-            run_once({"qpaeq", ""})
+            os.execute(string.format("%s set %s 100%%", theme.volume.cmd, theme.volume.channel))
+            theme.volume.notify()
+            -- run_once({"qpaeq", ""})
           end),
           awful.button({}, 3, function()
             os.execute(string.format("%s set %s toggle", theme.volume.cmd, theme.volume.togglechannel or theme.volume.channel))
