@@ -571,7 +571,7 @@ function theme.at_screen_connect(s)
     gears.wallpaper.maximized(wallpaper, s, true)
 
     -- Tags
-    awful.util.tagnames = { "", "", "", "", "", "", "", "" }
+    awful.util.tagnames = { "", "", "", "", "", "", "", "" }
     awful.tag(awful.util.tagnames, s, awful.layout.layouts)
 
     -- Create a promptbox for each screen
