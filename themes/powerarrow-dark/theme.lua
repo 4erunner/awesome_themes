@@ -67,10 +67,11 @@ local timeout_popup_notify = 0.4
 
 
 local theme                                     = {}
+theme.def_font                                  = "Droid Sans Mono Bold"
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/powerarrow-dark"
 theme.wallpaper                                 = theme.dir .. "/1920x1080-2.png"--"/wall.png"
 theme.awesome_icon                              = theme.dir .. "/icons//awesome.png"
-theme.font                                      = "xos4 Terminus 9"
+theme.font                                      = theme.def_font .. " 8"
 theme.fg_normal                                 = "#DDDDFF"
 theme.fg_focus                                  = "#EA6F81"
 theme.fg_urgent                                 = "#CC9393"
@@ -165,7 +166,7 @@ local dockshape = function(cr, width, height)
 end
 
 local function notify_bar(procent)
-    preset = { font = "Monospace 12", fg = theme.fg_normal }
+    preset = { font = theme.def_font .." 14", fg = theme.fg_normal }
     preset.title = string.format("%s - %s%%", "backlight", procent)
 
     -- -- tot is the maximum number of ticks to display in the notification
@@ -221,7 +222,7 @@ local clock = awful.widget.watch(
 theme.weather = lain.widget.weather({
     city_id = 523750, -- NChelny
     weather_na_markup = "", 
-    notification_preset = { font = "Monospace 10" },
+    notification_preset = { font = theme.def_font .." 10" },
     lang = "ru",
     settings = function()
         units = math.floor(weather_now["main"]["temp"])
@@ -230,14 +231,14 @@ theme.weather = lain.widget.weather({
 })
 
 -- Calendar
-theme.cal = lain.widget.cal({
-    attach_to = { clock },
-    notification_preset = {
-        font = "xos4 Terminus 10",
-        fg   = theme.fg_normal,
-        bg   = theme.bg_normal
-    }
-})
+-- theme.cal = lain.widget.cal({
+--     attach_to = { clock },
+--     notification_preset = {
+--         font = theme.def_font .." 10",
+--         fg   = theme.fg_normal,
+--         bg   = theme.bg_normal
+--     }
+-- })
 
 -- Battery
 local baticon = wibox.widget.imagebox(theme.widget_battery)
@@ -328,7 +329,7 @@ local cpuicon = wibox.widget.imagebox(theme.widget_cpu)
 local cpu = lain.widget.cpu({
     settings = function()
         widget:set_markup(markup.font(theme.font, " " .. cpu_now.usage .. "% "))
-        widget.forced_width = 30
+        widget.forced_width = 38
         widget:buttons(my_table.join (
           awful.button({}, 1, function()
             run_once({"hardinfo", ""})
@@ -345,7 +346,7 @@ local tempicon = wibox.widget.imagebox(theme.widget_temp)
 local temp = lain.widget.temp({
     settings = function()
         widget:set_markup(markup.font(theme.font, " " .. coretemp_now .. "°C "))
-        widget.forced_width = 50
+        widget.forced_width = 65
         widget:buttons(my_table.join (
           awful.button({}, 1, function()
             run_once({"konsole -e 'glances'", ""})
@@ -364,7 +365,7 @@ local bbswwitch = wibox.widget.textbox()
 -- ALSA volume
 local volicon = wibox.widget.imagebox(theme.widget_vol)
 theme.volume = lain.widget.alsabar({
-    notification_preset = { font = "Monospace 12", fg = theme.fg_normal, timeout = timeout_popup_notify },
+    notification_preset = { font = theme.def_font .." 14", fg = theme.fg_normal, timeout = timeout_popup_notify },
     settings = function()
         if volume_now.status == "off" then
             volicon:set_image(theme.widget_vol_mute)
@@ -418,7 +419,7 @@ local net = lain.widget.net({
 })
 
 local locdisplay = wibox.widget.textbox()
-locdisplay.font = "xos4 Terminus 10"
+locdisplay.font = theme.def_font .." 10"
 locdisplay.markup =markup('red'  ,'')
 locdisplay:buttons(my_table.join (
 	awful.button({}, 1, 
@@ -434,11 +435,11 @@ locdisplay:buttons(my_table.join (
 ))
 -- Separators
 -- local spr     = wibox.widget.textbox()
--- spr.font = "xos4 Terminus 18"
+-- spr.font = theme.def_font .." 18"
 -- spr.markup =markup(theme.border_focus , '][')
 local spr = wibox.widget.imagebox(theme.widget_sep)
 -- local spr_l     = wibox.widget.textbox()
--- spr_l.font = "xos4 Terminus 18"
+-- spr_l.font = theme.def_font .." 18"
 -- spr_l.markup =markup(theme.border_focus , '[')
 -- local spr_r     = wibox.widget.textbox()
 -- spr_r.font = "xos4 Terminus 18"
