@@ -24,7 +24,7 @@ local pairs, string, table, os = pairs, string, table, os
 
 local existent_paths = {}
 table.insert(existent_paths, string.format("%s/Desktop", os.getenv("HOME")))
-menu_gen.all_menu_dirs = existent_paths
+menu_gen.all_menu_dirs2 = existent_paths
 
 -- Expecting a wm_name of awesome omits too many applications and tools
 menu_utils.wm_name = ""
@@ -71,7 +71,7 @@ function menu.build()
     local dirs_parsed = 0
     local apps = {}
     apps['default'] = {}
-    for _, dir in ipairs(menu_gen.all_menu_dirs) do
+    for _, dir in ipairs(menu_gen.all_menu_dirs2) do
         local paths = pipelines('find '..dir..' -maxdepth 1 -type f')
         for path in paths do
             if path:find("%.desktop$") then

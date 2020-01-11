@@ -63,7 +63,7 @@ end
 })
 
 -- HACK xcomp dont update notify power_supply
-local timeout_popup_notify = 0.4
+local timeout_popup_notify = 0.3
 
 
 local theme                                     = {}
@@ -365,7 +365,7 @@ local bbswwitch = wibox.widget.textbox()
 -- ALSA volume
 local volicon = wibox.widget.imagebox(theme.widget_vol)
 theme.volume = lain.widget.alsabar({
-    notification_preset = { font = theme.def_font .." 14", fg = theme.fg_normal, timeout = timeout_popup_notify },
+    notification_preset = { font = theme.def_font .." 14", fg = theme.fg_normal, timeout = timeout_popup_notify }, 
     settings = function()
         if volume_now.status == "off" then
             volicon:set_image(theme.widget_vol_mute)
@@ -425,6 +425,11 @@ locdisplay:buttons(my_table.join (
 	awful.button({}, 1, 
 		function()
 		run_once({"/usr/bin/dm-tool switch-to-greeter", ""})
+		end
+	),
+	awful.button({}, 3, 
+		function()
+			awesome.quit()
 		end
 	),
 	awful.button({}, 3, 
