@@ -427,7 +427,7 @@ locdisplay:buttons(my_table.join (
 		run_once({"/usr/bin/dm-tool switch-to-greeter", ""})
 		end
 	),
-	awful.button({}, 3, 
+	awful.button({}, 2, 
 		function()
 			awesome.quit()
 		end
