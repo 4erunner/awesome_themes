@@ -23,8 +23,8 @@ do
     "xfce4-power-manager",
     "nm-applet",
     "blueman-applet",
-    "xcompmgr -nC"
-    -- "compton -r 0 -fC -l 0 -t 0 -D 1 -I 0.1 -O 0.1"
+    -- "xcompmgr -nC"
+    "picom --config ~/.config/awesome/compton.conf -r 0 -fC -l 0 -t 0 -D 1 -I 0.1 -O 0.1"
     --"kmix"
   }
 
@@ -63,7 +63,7 @@ end
 })
 
 -- HACK xcomp dont update notify power_supply
-local timeout_popup_notify = 0.3
+local timeout_popup_notify = 3
 
 
 local theme                                     = {}
