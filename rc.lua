@@ -178,15 +178,15 @@ awful.util.tasklist_buttons = my_table.join(
     end),
     -- awful.button({ }, 4, function () awful.client.focus.byidx(1) end),
     -- awful.button({ }, 5, function () awful.client.focus.byidx(-1) end)
-    awful.button({ }, 4, function (c) 
-        c.maximized = true 
+    awful.button({ }, 4, function (c)
+        c.maximized = true
         client.focus = c
         c:raise()
         end),
-    awful.button({ }, 5, function (c) 
+    awful.button({ }, 5, function (c)
         c.maximized = false
         c.minimized = false
-        client.focus = c 
+        client.focus = c
         c:raise()
         end)
 
@@ -270,12 +270,12 @@ globalkeys = my_table.join(
               {description = "keyboard layout", group = "hotkeys"}),
 
     -- Keyboard Layout
-    awful.key({ "Shift" }, "Control_L", function () mykeyboardlayout.next_layout(); end, 
+    awful.key({ "Shift" }, "Control_L", function () mykeyboardlayout.next_layout(); end,
         {description = "lock screen", group = "hotkeys"}),
     awful.key({ "Control" }, "Shift_L", function () mykeyboardlayout.next_layout(); end,
         {description = "keyboard layout", group = "hotkeys"}),
 
-    awful.key({ }, "Print", function () awful.util.spawn("deepin-screenshot", false) end),
+    awful.key({ }, "Print", function () awful.util.spawn("flameshot", false) end),
 
        -- Volume Keys
    awful.key({}, "XF86AudioLowerVolume", function ()
