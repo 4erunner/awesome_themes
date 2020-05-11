@@ -22,7 +22,7 @@ do
   {
     "xfce4-power-manager",
     "nm-applet",
-    "blueman-applet",
+    "blueman-tray",
     -- "xcompmgr -nC"
     "picom --config ~/.config/awesome/compton.conf -r 0 -fC -l 0 -t 0 -D 1 -I 0.1 -O 0.1"
     --"kmix"
@@ -314,7 +314,7 @@ local mem = lain.widget.mem({
         widget:set_markup(markup.font(theme.font, " " .. mem_now.used .. "MB "))
         widget:buttons(my_table.join (
           awful.button({}, 1, function()
-            run_once({"xfce4-taskmanager", ""})
+            run_once({"ksysguard", ""})
           end)))
     end
 })
@@ -419,7 +419,7 @@ local net = lain.widget.net({
 })
 
 local locdisplay = wibox.widget.textbox()
-locdisplay.font = theme.def_font .." 10"
+locdisplay.font = "Font Awesome 5 Free Solid 10" --theme.def_font ..
 locdisplay.markup =markup('red'  ,'')
 locdisplay:buttons(my_table.join (
 	awful.button({}, 1, 
