@@ -75,7 +75,7 @@ theme.font                                      = theme.def_font .. " 8"
 theme.fg_normal                                 = "#DDDDFF"
 theme.fg_focus                                  = "#EA6F81"
 theme.fg_urgent                                 = "#CC9393"
-theme.bg_normal                                 = "#1A1A1A" 
+theme.bg_normal                                 = "#1A1A1A"
 theme.bg_focus                                  = "#313131"
 theme.bg_urgent                                 = "#1A1A1A"
 theme.bg_systray                                = "#1A1A1A"
@@ -127,7 +127,7 @@ theme.tasklist_plain_task_name                  = true
 theme.tasklist_disable_task_name                = false
 theme.tasklist_disable_icon                     = false
 theme.tasklist_shape                            = tasklist_shape
-theme.tasklist_shape_border_color_focus         = theme.border_focus 
+theme.tasklist_shape_border_color_focus         = theme.border_focus
 theme.tasklist_shape_border_width_focus         = 1
 theme.tasklist_shape_border_color               = theme.border_normal
 theme.tasklist_shape_border_width               = 0
@@ -195,7 +195,7 @@ local function notify_bar(procent)
             timeout =  timeout_popup_notify,
             destroy = function() notification = nil end
         }
-    else 
+    else
       naughty.replace_text(notification, preset.title, preset.text)
     end
 end
@@ -221,7 +221,7 @@ local clock = awful.widget.watch(
 -- Weather
 theme.weather = lain.widget.weather({
     city_id = 523750, -- NChelny
-    weather_na_markup = "", 
+    weather_na_markup = "",
     notification_preset = { font = theme.def_font .." 10" },
     lang = "ru",
     settings = function()
@@ -365,7 +365,7 @@ local bbswwitch = wibox.widget.textbox()
 -- ALSA volume
 local volicon = wibox.widget.imagebox(theme.widget_vol)
 theme.volume = lain.widget.alsabar({
-    notification_preset = { font = theme.def_font .." 14", fg = theme.fg_normal, timeout = timeout_popup_notify }, 
+    notification_preset = { font = theme.def_font .." 14", fg = theme.fg_normal, timeout = timeout_popup_notify },
     settings = function()
         if volume_now.status == "off" then
             volicon:set_image(theme.widget_vol_mute)
@@ -422,17 +422,17 @@ local locdisplay = wibox.widget.textbox()
 locdisplay.font = "Font Awesome 5 Free Solid 10" --theme.def_font ..
 locdisplay.markup =markup('red'  ,'')
 locdisplay:buttons(my_table.join (
-	awful.button({}, 1, 
+	awful.button({}, 1,
 		function()
 		run_once({"/usr/bin/dm-tool switch-to-greeter", ""})
 		end
 	),
-	awful.button({}, 2, 
+	awful.button({}, 2,
 		function()
 			awesome.quit()
 		end
 	),
-	awful.button({}, 3, 
+	awful.button({}, 3,
 		function()
 			run_once({"poweroff --reboot", ""})
 		end
@@ -458,21 +458,21 @@ function theme.vertical_wibox(s)
       s.appmenu = appbar.menu.build()
     end
 
-    s.dockwidth = (#s.appmenu * 42) 
+    s.dockwidth = (#s.appmenu * 42)
     s.dockheight = s.geometry.height
 
     -- s.myleftwibox = wibox({ screen = s, x=0, y=s.workarea.height/2 - s.dockheight/2, width = 1, height = s.dockheight, fg = theme.fg_normal, bg = barcolor2, ontop = true, visible = true, type = "dock" })
 
-    s.myleftwibox = wibox({ 
-      screen = s, 
-      x=s.workarea.width/2 - s.dockwidth/2, 
-      y=s.dockheight-1, 
-      width = s.dockwidth, 
-      height = 1, 
-      fg = theme.fg_normal, 
-      bg = theme.bg_normal, 
-      ontop = true, 
-      visible = true, 
+    s.myleftwibox = wibox({
+      screen = s,
+      x=s.workarea.width/2 - s.dockwidth/2,
+      y=s.dockheight-1,
+      width = s.dockwidth,
+      height = 1,
+      fg = theme.fg_normal,
+      bg = theme.bg_normal,
+      ontop = true,
+      visible = true,
       type = "dock"})
 
     if s.index > 1 then
@@ -480,7 +480,7 @@ function theme.vertical_wibox(s)
         s.myleftwibox.y = screen[1].myleftwibox.y
         s.myleftwibox.x = s.myleftwibox.x + (s.workarea.width - s.dockwidth)/2
     end
-    
+
 
 
     -- bar = {layout = wibox.layout.fixed.vertical}
@@ -540,7 +540,7 @@ function theme.vertical_wibox(s)
         local s = awful.screen.focused()
         -- s.myleftwibox.width = 1
         s.myleftwibox.height = 1
-        s.myleftwibox.y = s.dockheight - 1 
+        s.myleftwibox.y = s.dockheight - 1
         --mylauncher2.visible = false
         gears.surface.apply_shape_bounding(s.myleftwibox, dockshape)
         if not s.docktimer.started then
@@ -617,8 +617,8 @@ function theme.at_screen_connect(s)
             bat.widget,
             memicon,
             mem.widget,
-            cpuicon, 
-            cpu.widget, 
+            cpuicon,
+            cpu.widget,
             tempicon,
             temp.widget,
             bbswwitch,
@@ -645,12 +645,12 @@ function theme.at_screen_connect(s)
             bat.widget,
             memicon,
             mem.widget,
-            cpuicon, 
-            cpu.widget, 
+            cpuicon,
+            cpu.widget,
             tempicon,
             temp.widget,
             bbswwitch,
-            neticon, 
+            neticon,
             net.widget,
             spr,
             locdisplay,
@@ -710,7 +710,7 @@ function theme.at_screen_connect(s)
         })
     end
     }
- 
+
 
 end
 
